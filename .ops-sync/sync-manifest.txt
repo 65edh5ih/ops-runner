@@ -54,6 +54,7 @@
 .openhands/skills/outbox-proposal/SKILL.md
 .openhands/skills/sop-format/SKILL.md
 .openhands/skills/task-history/SKILL.md
+.ops-sync/tasks/20260726-remove-codex-review-slice.md
 .qwen/skills/actions-quota/SKILL.md
 .qwen/skills/ci-logs/SKILL.md
 .qwen/skills/cross-repo-task/SKILL.md
