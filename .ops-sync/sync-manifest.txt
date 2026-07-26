@@ -20,7 +20,7 @@
 .cline/skills/outbox-proposal/SKILL.md
 .cline/skills/sop-format/SKILL.md
 .cline/skills/task-history/SKILL.md
-.clinerules/ai-ops.md
+.clinerules/ops-sync.md
 .codex/skills/actions-quota/SKILL.md
 .codex/skills/ci-logs/SKILL.md
 .codex/skills/cross-repo-task/SKILL.md
@@ -28,8 +28,8 @@
 .codex/skills/outbox-proposal/SKILL.md
 .codex/skills/sop-format/SKILL.md
 .codex/skills/task-history/SKILL.md
-.continue/rules/ai-ops.md
-.cursor/rules/ai-ops.mdc
+.continue/rules/ops-sync.md
+.cursor/rules/ops-sync.mdc
 .gemini/skills/actions-quota/SKILL.md
 .gemini/skills/ci-logs/SKILL.md
 .gemini/skills/cross-repo-task/SKILL.md
@@ -61,7 +61,7 @@
 .qwen/skills/outbox-proposal/SKILL.md
 .qwen/skills/sop-format/SKILL.md
 .qwen/skills/task-history/SKILL.md
-.windsurf/rules/ai-ops.md
+.windsurf/rules/ops-sync.md
 docs/actions-quota.md
 docs/ci-logs.md
 docs/cross-repo-tasks.md
