@@ -74,3 +74,4 @@ docs/ops-sync-design.md
 docs/outbox-proposal.md
 docs/sop-format.md
 docs/task-history.md
+scripts/new-task-history.mjs
