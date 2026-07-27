@@ -1,0 +1,190 @@
+---
+種別: shared-file
+対象パス: .github/actions/publish-ephemeral/action.yml
+理由: retention が slice-root 直下だけを境界とし、スライス内の同名ファイルで誤ったディレクトリを削除しないよう設計記述と実装を一致させるため。
+---
+name: Publish ephemeral result
+description: >-
+  Publish a local directory snapshot into a slice of a dedicated *ephemeral*
+  branch. Unlike `publish-ci-logs` (append-only history for durable CI logs),
+  this leaves no git history: the branch is rewritten as a single orphan commit
+  on every write, holding only the slices newer than `retention-days`. Use it
+  for read-once agent results (net-fetch) that must not accumulate — especially
+  in public repositories, where anything that enters history is world-readable
+  forever even after the file is deleted. Failures never fail the calling job;
+  they surface as workflow warnings.
+inputs:
+  source-dir:
+    description: >-
+      Local directory whose contents become the destination slice. Required
+      unless prune-only is true.
+    required: false
+    default: ""
+  dest:
+    description: >-
+      Slice path within the branch (e.g. `net-fetch/<request_id>`). Required
+      unless prune-only is true. Must be caller-validated (no path traversal).
+    required: false
+    default: ""
+  branch:
+    description: Ephemeral branch to publish into.
+    required: false
+    default: "net-fetch-results"
+  slice-root:
+    description: Top-level directory containing per-result slices.
+    required: false
+    default: "net-fetch"
+  retention-days:
+    description: >-
+      Slices older than this are dropped on every write. Must be a positive
+      integer. Age comes from the `.published-at` marker this action writes into
+      each slice; a slice whose marker is missing or unreadable is treated as
+      expired (fail toward deletion, since the point of this branch is to not
+      retain).
+    required: false
+    default: "3"
+  prune-only:
+    description: >-
+      When "true", only expire old slices (no slice is written). Used by the
+      scheduled sweep so results do not linger while the relay sits idle.
+    required: false
+    default: "false"
+  commit-message:
+    description: Commit message for the rewritten branch.
+    required: true
+  token:
+    description: "GitHub token with contents:write permission on this repository."
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        SRC: ${{ inputs.source-dir }}
+        DEST: ${{ inputs.dest }}
+        BRANCH: ${{ inputs.branch }}
+        SLICE_ROOT: ${{ inputs.slice-root }}
+        RETENTION_DAYS: ${{ inputs.retention-days }}
+        PRUNE_ONLY: ${{ inputs.prune-only }}
+        MSG: ${{ inputs.commit-message }}
+        GH_TOKEN: ${{ inputs.token }}
+        REPO: ${{ github.repository }}
+      run: |
+        set -uo pipefail
+
+        if [ "$PRUNE_ONLY" != "true" ]; then
+          if [ -z "$DEST" ]; then
+            echo "::warning::publish-ephemeral: dest is empty; refusing to publish."
+            exit 0
+          fi
+          if [ ! -d "$SRC" ]; then
+            echo "::warning::publish-ephemeral: source dir '$SRC' is missing; nothing to publish."
+            exit 0
+          fi
+          src_abs="$(cd "$SRC" && pwd)"
+        fi
+
+        case "$RETENTION_DAYS" in
+          ''|*[!0-9]*) RETENTION_DAYS=3 ;;
+        esac
+        [ "$RETENTION_DAYS" -gt 0 ] || RETENTION_DAYS=3
+
+        tmp="$(mktemp -d)"
+        cleanup() { rm -rf "$tmp"; }
+        trap cleanup EXIT
+
+        url="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+
+        # Rebuild the branch from scratch and force-push, so nothing accumulates in history.
+        # A concurrent net-fetch run would be clobbered by a blind force push, so the push is
+        # leased on the sha we started from: if someone else republished meanwhile the push is
+        # rejected and we redo the whole cycle against their state (their slice survives).
+        attempt_publish() {
+          rm -rf "$tmp"; mkdir -p "$tmp"
+
+          local base=""
+          if git clone --depth 1 --branch "$BRANCH" "$url" "$tmp" 2>/dev/null; then
+            base="$(git -C "$tmp" rev-parse HEAD)"
+          else
+            echo "publish-ephemeral: branch '$BRANCH' not found; starting a fresh orphan branch."
+            git clone --depth 1 "$url" "$tmp" || return 1
+            git -C "$tmp" checkout --orphan "$BRANCH" >/dev/null 2>&1 || return 1
+            git -C "$tmp" rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          git -C "$tmp" config user.name "github-actions[bot]"
+          git -C "$tmp" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # ── expire old slices ────────────────────────────────────────────
+          local now cutoff marker dir ts
+          now="$(date -u +%s)"
+          cutoff="$(( now - RETENTION_DAYS * 86400 ))"
+          # A missing marker cannot establish a safe retention age. Fail toward deletion.
+          if [ -d "${tmp}/${SLICE_ROOT}" ]; then
+            while IFS= read -r -d '' dir; do
+              if [ ! -f "${dir}/.published-at" ]; then
+                echo "publish-ephemeral: expiring $(basename "$dir") (missing publication marker)"
+                rm -rf "$dir"
+              fi
+            done < <(find "${tmp}/${SLICE_ROOT}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+          fi
+          while IFS= read -r -d '' dir; do
+            marker="${dir}/.published-at"
+            [ -f "$marker" ] || continue
+            ts="$(head -c 32 "$marker" 2>/dev/null | tr -dc '0-9')"
+            if [ -z "$ts" ] || [ "$ts" -lt "$cutoff" ]; then
+              echo "publish-ephemeral: expiring $(basename "$dir")"
+              rm -rf "$dir"
+            fi
+          done < <(find "${tmp}/${SLICE_ROOT}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+
+          # ── write our own slice ──────────────────────────────────────────
+          if [ "$PRUNE_ONLY" != "true" ]; then
+            rm -rf "${tmp:?}/${DEST}"
+            mkdir -p "${tmp}/${DEST}"
+            cp -a "${src_abs}/." "${tmp}/${DEST}/"
+            date -u +%s > "${tmp}/${DEST}/.published-at"
+          fi
+
+          # Single orphan commit: the branch never carries history of past results.
+          git -C "$tmp" checkout --orphan __publish >/dev/null 2>&1 || return 1
+          git -C "$tmp" add -A
+
+          # Decide "did anything change?" by comparing the rebuilt tree to the tree we started
+          # from -- NOT with `git diff --cached`. On an unborn orphan branch that diffs the index
+          # against the *empty* tree, so a sweep that expires the last remaining slice looks like
+          # "no changes" and returns without pushing, leaving that slice on the branch forever
+          # (the TTL sweep could never empty the branch). Comparing trees makes emptying the
+          # branch a real change, and --allow-empty lets the resulting empty commit be created.
+          local new_tree old_tree
+          new_tree="$(git -C "$tmp" write-tree)" || return 1
+          if [ -n "$base" ]; then
+            old_tree="$(git -C "$tmp" rev-parse "${base}^{tree}" 2>/dev/null || true)"
+            if [ -n "$old_tree" ] && [ "$new_tree" = "$old_tree" ]; then
+              echo "publish-ephemeral: nothing to change on '$BRANCH'."
+              return 0
+            fi
+          fi
+          git -C "$tmp" commit -q --allow-empty -m "$MSG" || return 1
+
+          if [ -n "$base" ]; then
+            git -C "$tmp" push --force-with-lease="${BRANCH}:${base}" origin "HEAD:${BRANCH}" 2>/dev/null
+          else
+            git -C "$tmp" push origin "HEAD:${BRANCH}" 2>/dev/null
+          fi
+        }
+
+        pushed=0
+        for i in 1 2 3 4 5; do
+          if attempt_publish; then
+            pushed=1
+            break
+          fi
+          echo "publish-ephemeral: attempt $i failed (branch moved or transient); retrying..."
+          sleep "$((i * 3))"
+        done
+
+        if [ "$pushed" != "1" ]; then
+          echo "::warning::publish-ephemeral: failed to publish '${DEST:-<prune-only>}' to '${BRANCH}' after retries."
+        fi
+        exit 0
