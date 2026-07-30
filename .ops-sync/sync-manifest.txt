@@ -1,6 +1,7 @@
 .agents/skills/actions-quota/SKILL.md
 .agents/skills/ci-logs/SKILL.md
 .agents/skills/cross-repo-task/SKILL.md
+.agents/skills/gha-trigger-ui/SKILL.md
 .agents/skills/net-fetch/SKILL.md
 .agents/skills/outbox-proposal/SKILL.md
 .agents/skills/sop-format/SKILL.md
@@ -9,6 +10,7 @@
 .claude/skills/actions-quota/SKILL.md
 .claude/skills/ci-logs/SKILL.md
 .claude/skills/cross-repo-task/SKILL.md
+.claude/skills/gha-trigger-ui/SKILL.md
 .claude/skills/net-fetch/SKILL.md
 .claude/skills/outbox-proposal/SKILL.md
 .claude/skills/sop-format/SKILL.md
@@ -16,6 +18,7 @@
 .cline/skills/actions-quota/SKILL.md
 .cline/skills/ci-logs/SKILL.md
 .cline/skills/cross-repo-task/SKILL.md
+.cline/skills/gha-trigger-ui/SKILL.md
 .cline/skills/net-fetch/SKILL.md
 .cline/skills/outbox-proposal/SKILL.md
 .cline/skills/sop-format/SKILL.md
@@ -24,6 +27,7 @@
 .codex/skills/actions-quota/SKILL.md
 .codex/skills/ci-logs/SKILL.md
 .codex/skills/cross-repo-task/SKILL.md
+.codex/skills/gha-trigger-ui/SKILL.md
 .codex/skills/net-fetch/SKILL.md
 .codex/skills/outbox-proposal/SKILL.md
 .codex/skills/sop-format/SKILL.md
@@ -33,6 +37,7 @@
 .gemini/skills/actions-quota/SKILL.md
 .gemini/skills/ci-logs/SKILL.md
 .gemini/skills/cross-repo-task/SKILL.md
+.gemini/skills/gha-trigger-ui/SKILL.md
 .gemini/skills/net-fetch/SKILL.md
 .gemini/skills/outbox-proposal/SKILL.md
 .gemini/skills/sop-format/SKILL.md
@@ -50,6 +55,7 @@
 .openhands/skills/actions-quota/SKILL.md
 .openhands/skills/ci-logs/SKILL.md
 .openhands/skills/cross-repo-task/SKILL.md
+.openhands/skills/gha-trigger-ui/SKILL.md
 .openhands/skills/net-fetch/SKILL.md
 .openhands/skills/outbox-proposal/SKILL.md
 .openhands/skills/sop-format/SKILL.md
@@ -57,6 +63,7 @@
 .qwen/skills/actions-quota/SKILL.md
 .qwen/skills/ci-logs/SKILL.md
 .qwen/skills/cross-repo-task/SKILL.md
+.qwen/skills/gha-trigger-ui/SKILL.md
 .qwen/skills/net-fetch/SKILL.md
 .qwen/skills/outbox-proposal/SKILL.md
 .qwen/skills/sop-format/SKILL.md
@@ -66,6 +73,7 @@ docs/actions-quota.md
 docs/ci-logs.md
 docs/cross-repo-tasks.md
 docs/d1-capacity.md
+docs/gha-trigger-ui.md
 docs/history-inbox/README.md
 docs/merged-branch-guard.md
 docs/net-fetch.md
