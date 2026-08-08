@@ -6,6 +6,7 @@
 .agents/skills/gha-trigger-ui/SKILL.md
 .agents/skills/net-fetch/SKILL.md
 .agents/skills/outbox-proposal/SKILL.md
+.agents/skills/review-threads/SKILL.md
 .agents/skills/sop-format/SKILL.md
 .agents/skills/task-history/SKILL.md
 .claude/hooks/session-start.sh
@@ -17,6 +18,7 @@
 .claude/skills/gha-trigger-ui/SKILL.md
 .claude/skills/net-fetch/SKILL.md
 .claude/skills/outbox-proposal/SKILL.md
+.claude/skills/review-threads/SKILL.md
 .claude/skills/sop-format/SKILL.md
 .claude/skills/task-history/SKILL.md
 .cline/skills/actions-quota/SKILL.md
@@ -27,6 +29,7 @@
 .cline/skills/gha-trigger-ui/SKILL.md
 .cline/skills/net-fetch/SKILL.md
 .cline/skills/outbox-proposal/SKILL.md
+.cline/skills/review-threads/SKILL.md
 .cline/skills/sop-format/SKILL.md
 .cline/skills/task-history/SKILL.md
 .clinerules/ops-sync.md
@@ -38,6 +41,7 @@
 .codex/skills/gha-trigger-ui/SKILL.md
 .codex/skills/net-fetch/SKILL.md
 .codex/skills/outbox-proposal/SKILL.md
+.codex/skills/review-threads/SKILL.md
 .codex/skills/sop-format/SKILL.md
 .codex/skills/task-history/SKILL.md
 .continue/rules/ops-sync.md
@@ -50,6 +54,7 @@
 .gemini/skills/gha-trigger-ui/SKILL.md
 .gemini/skills/net-fetch/SKILL.md
 .gemini/skills/outbox-proposal/SKILL.md
+.gemini/skills/review-threads/SKILL.md
 .gemini/skills/sop-format/SKILL.md
 .gemini/skills/task-history/SKILL.md
 .githooks/pre-push
@@ -70,6 +75,7 @@
 .openhands/skills/gha-trigger-ui/SKILL.md
 .openhands/skills/net-fetch/SKILL.md
 .openhands/skills/outbox-proposal/SKILL.md
+.openhands/skills/review-threads/SKILL.md
 .openhands/skills/sop-format/SKILL.md
 .openhands/skills/task-history/SKILL.md
 .qwen/skills/actions-quota/SKILL.md
@@ -80,6 +86,7 @@
 .qwen/skills/gha-trigger-ui/SKILL.md
 .qwen/skills/net-fetch/SKILL.md
 .qwen/skills/outbox-proposal/SKILL.md
+.qwen/skills/review-threads/SKILL.md
 .qwen/skills/sop-format/SKILL.md
 .qwen/skills/task-history/SKILL.md
 .windsurf/rules/ops-sync.md
@@ -94,6 +101,7 @@ docs/merged-branch-guard.md
 docs/net-fetch.md
 docs/ops-sync-design.md
 docs/outbox-proposal.md
+docs/review-threads.md
 docs/sop-format.md
 docs/task-history.md
 scripts/new-task-history.mjs
