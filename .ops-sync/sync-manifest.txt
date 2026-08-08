@@ -1,4 +1,5 @@
 .agents/skills/actions-quota/SKILL.md
+.agents/skills/agent-handoff/SKILL.md
 .agents/skills/ci-logs/SKILL.md
 .agents/skills/cross-repo-task/SKILL.md
 .agents/skills/d1-operations/SKILL.md
@@ -9,6 +10,7 @@
 .agents/skills/task-history/SKILL.md
 .claude/hooks/session-start.sh
 .claude/skills/actions-quota/SKILL.md
+.claude/skills/agent-handoff/SKILL.md
 .claude/skills/ci-logs/SKILL.md
 .claude/skills/cross-repo-task/SKILL.md
 .claude/skills/d1-operations/SKILL.md
@@ -18,6 +20,7 @@
 .claude/skills/sop-format/SKILL.md
 .claude/skills/task-history/SKILL.md
 .cline/skills/actions-quota/SKILL.md
+.cline/skills/agent-handoff/SKILL.md
 .cline/skills/ci-logs/SKILL.md
 .cline/skills/cross-repo-task/SKILL.md
 .cline/skills/d1-operations/SKILL.md
@@ -28,6 +31,7 @@
 .cline/skills/task-history/SKILL.md
 .clinerules/ops-sync.md
 .codex/skills/actions-quota/SKILL.md
+.codex/skills/agent-handoff/SKILL.md
 .codex/skills/ci-logs/SKILL.md
 .codex/skills/cross-repo-task/SKILL.md
 .codex/skills/d1-operations/SKILL.md
@@ -39,6 +43,7 @@
 .continue/rules/ops-sync.md
 .cursor/rules/ops-sync.mdc
 .gemini/skills/actions-quota/SKILL.md
+.gemini/skills/agent-handoff/SKILL.md
 .gemini/skills/ci-logs/SKILL.md
 .gemini/skills/cross-repo-task/SKILL.md
 .gemini/skills/d1-operations/SKILL.md
@@ -58,6 +63,7 @@
 .github/workflows/net-fetch.yml
 .openhands/microagents/repo.md
 .openhands/skills/actions-quota/SKILL.md
+.openhands/skills/agent-handoff/SKILL.md
 .openhands/skills/ci-logs/SKILL.md
 .openhands/skills/cross-repo-task/SKILL.md
 .openhands/skills/d1-operations/SKILL.md
@@ -67,6 +73,7 @@
 .openhands/skills/sop-format/SKILL.md
 .openhands/skills/task-history/SKILL.md
 .qwen/skills/actions-quota/SKILL.md
+.qwen/skills/agent-handoff/SKILL.md
 .qwen/skills/ci-logs/SKILL.md
 .qwen/skills/cross-repo-task/SKILL.md
 .qwen/skills/d1-operations/SKILL.md
@@ -77,6 +84,7 @@
 .qwen/skills/task-history/SKILL.md
 .windsurf/rules/ops-sync.md
 docs/actions-quota.md
+docs/agent-handoff.md
 docs/ci-logs.md
 docs/cross-repo-tasks.md
 docs/d1-operations.md
